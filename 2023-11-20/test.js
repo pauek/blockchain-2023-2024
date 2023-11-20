@@ -1,0 +1,9 @@
+let datos = {
+  fecha: "2023-11-20",
+  título: "Javascript 2",
+  temas: ["Funciones", "Objetos", "Arrays", "JSON"],
+  alumnos: 18,
+  difícil: true,
+  aburrida: false,
+  video: null,
+};

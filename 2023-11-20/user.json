@@ -1,0 +1,47 @@
+{
+  "results": [
+    {
+      "gender": "female",
+      "name": { "title": "Mrs", "first": "Anđela", "last": "Stojanović" },
+      "location": {
+        "street": { "number": 9405, "name": "Valačka" },
+        "city": "Belgrade",
+        "state": "Bor",
+        "country": "Serbia",
+        "postcode": 93212,
+        "coordinates": { "latitude": "63.9728", "longitude": "162.7805" },
+        "timezone": {
+          "offset": "-7:00",
+          "description": "Mountain Time (US & Canada)"
+        }
+      },
+      "email": "andela.stojanovic@example.com",
+      "login": {
+        "uuid": "0c93fe10-e043-4e08-af8e-3e0baa1e99fc",
+        "username": "tinydog933",
+        "password": "leopard",
+        "salt": "bsn4cI69",
+        "md5": "9f0fdbaebdd01c72eb9a10ae63bb11ca",
+        "sha1": "2292619ac471b37f621559c2abc958bd2153b53e",
+        "sha256": "c7aafe5c00350b556aa1aaff04f585c5594203c1f30c24ac59cb00ccb6a85b7a"
+      },
+      "dob": { "date": "1946-04-09T04:36:30.778Z", "age": 77 },
+      "registered": { "date": "2016-10-13T10:38:05.043Z", "age": 7 },
+      "phone": "030-9659-767",
+      "cell": "065-1546-530",
+      "id": { "name": "SID", "value": "178705827" },
+      "picture": {
+        "large": "https://randomuser.me/api/portraits/women/61.jpg",
+        "medium": "https://randomuser.me/api/portraits/med/women/61.jpg",
+        "thumbnail": "https://randomuser.me/api/portraits/thumb/women/61.jpg"
+      },
+      "nat": "RS"
+    }
+  ],
+  "info": {
+    "seed": "68516e4981590740",
+    "results": 1,
+    "page": 1,
+    "version": "1.4"
+  }
+}
