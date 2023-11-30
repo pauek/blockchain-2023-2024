@@ -1,0 +1,11 @@
+{
+  "name": "fetch-async-await",
+  "module": "fetch-async-await.ts",
+  "type": "module",
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
