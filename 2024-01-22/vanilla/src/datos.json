@@ -1,0 +1,17 @@
+[
+    {
+        "first": "James",
+        "last": "Bond",
+        "age": 27
+    },
+    {
+        "first": "Clark",
+        "last": "Kent",
+        "age": 45
+    },
+    {
+        "first": "Bob",
+        "last": "Parr",
+        "age": 52
+    }
+]
