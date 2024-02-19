@@ -1,9 +1,11 @@
 import BeerList from "@/components/BeerList";
+import BeerSearchResults from "@/components/BeerSearchResults";
 import Box from "@/components/Box";
 import Clock from "@/components/Clock";
 import Collapsible from "@/components/Collapsible";
 import Counter from "@/components/Counter";
 import OnOff from "@/components/OnOff";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -13,9 +15,12 @@ export default function Home() {
         <p>Esto es un mensaje</p>
       </Box>
 
+      <Link href="/beers" className="text-blue-500">Go to Beer Search</Link>
+
       <Clock />
 
-      <BeerList />
+      <BeerSearchResults search="black" />
+      {/* <BeerList /> */}
 
       <OnOff />
       <Counter />
