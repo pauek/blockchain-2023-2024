@@ -40,6 +40,28 @@ export class VirtualMachine {
         this.state = "halted";
         break;
       }
+      case opcodes.PUSH: {
+        const value = this.code[this.ip];
+        this.ip++;
+        this.stack.push(value);
+        break;
+      }
+      case opcodes.ADD: {
+        const b = this.stack.pop();
+        const a = this.stack.pop();
+        if (!a || !b) {
+          throw new Error(
+            `VirtualMachine.pop: stack underflow!`
+          );
+        }
+        this.stack.push(a + b);
+        break;
+      }
+      case opcodes.PR: {
+        const top = this.stack.pop();
+        console.log(top);
+        break;
+      }
       default: {
         throw new Error(
           `VirtualMachine.pop: unknown opcode ${opcode}`
