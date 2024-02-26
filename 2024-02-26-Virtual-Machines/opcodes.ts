@@ -1,4 +1,4 @@
-export const opcodes = [
+const opcodeList = [
   { name: "HALT", opcode: 0, nparams: 0 },
 
   { name: "PUSH", opcode: 1, nparams: 1 },
@@ -12,3 +12,12 @@ export const opcodes = [
 
   { name: "PR", opcode: 100, nparams: 0 },
 ];
+
+let opcodes: Record<string, number> = {}
+for (const { name, opcode } of opcodeList) {
+  opcodes[name] = opcode;
+}
+
+module.exports = {
+  opcodes,
+}
