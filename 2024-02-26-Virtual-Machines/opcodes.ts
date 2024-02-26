@@ -3,7 +3,7 @@ const opcodeList = [
 
   { name: "PUSH", opcode: 1, nparams: 1 },
   { name: "POP", opcode: 2, nparams: 0 },
-  
+
   { name: "DUP", opcode: 3, nparams: 0 },
   { name: "DUP2", opcode: 4, nparams: 0 },
 
@@ -20,14 +20,18 @@ const opcodeList = [
   { name: "EQ", opcode: 14, nparams: 0 },
   { name: "NEQ", opcode: 15, nparams: 0 },
 
+  { name: "BR", opcode: 20, nparams: 1 },
+  { name: "BRT", opcode: 21, nparams: 1 },
+  { name: "BRF", opcode: 22, nparams: 1 },
+
   { name: "PR", opcode: 100, nparams: 0 },
 ];
 
-let opcodes: Record<string, number> = {}
+let opcodes: Record<string, number> = {};
 for (const { name, opcode } of opcodeList) {
   opcodes[name] = opcode;
 }
 
 module.exports = {
   opcodes,
-}
+};

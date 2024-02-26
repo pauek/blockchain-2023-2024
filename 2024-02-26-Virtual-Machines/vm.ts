@@ -16,7 +16,7 @@ export class VirtualMachine {
 
   pop(): number {
     const top = this.stack.pop();
-    if (!top) {
+    if (top === undefined) {
       throw new Error(
         `VirtualMachine.pop: stack underflow!`
       );
@@ -61,7 +61,9 @@ export class VirtualMachine {
       const a = pop();
       const result = fn(a, b);
       if (Number.isNaN(result) || result === Infinity) {
-        throw new Error(`VirtualMachine.step.artithmetic: Not a number!`);
+        throw new Error(
+          `VirtualMachine.step.artithmetic: Not a number!`
+        );
       }
       push(result);
     };
@@ -83,23 +85,78 @@ export class VirtualMachine {
         arithmetic((a, b) => a + b);
         break;
 
-      case opcodes.SUB: 
-        arithmetic((a, b) => a - b)
+      case opcodes.SUB:
+        arithmetic((a, b) => a - b);
         break;
-      
-      case opcodes.MUL: 
-        arithmetic((a, b) => a * b)
+
+      case opcodes.MUL:
+        arithmetic((a, b) => a * b);
         break;
-      
-      case opcodes.DIV: 
+
+      case opcodes.DIV:
         arithmetic((a, b) => a / b);
         break;
-      
-      case opcodes.MOD: 
+
+      case opcodes.MOD:
         arithmetic((a, b) => a % b);
         break;
 
-      
+      case opcodes.LT: {
+        const b = pop();
+        const a = pop();
+        this.flag = a < b;
+        break;
+      }
+      case opcodes.GT: {
+        const b = pop();
+        const a = pop();
+        this.flag = a > b;
+        break;
+      }
+      case opcodes.LTE: {
+        const b = pop();
+        const a = pop();
+        this.flag = a <= b;
+        break;
+      }
+      case opcodes.GTE: {
+        const b = pop();
+        const a = pop();
+        this.flag = a >= b;
+        break;
+      }
+      case opcodes.EQ: {
+        const b = pop();
+        const a = pop();
+        this.flag = a === b;
+        break;
+      }
+      case opcodes.NEQ: {
+        const b = pop();
+        const a = pop();
+        this.flag = a !== b;
+        break;
+      }
+
+      case opcodes.BR: {
+        const relAddr = next();
+        this.ip += relAddr;
+        break;
+      }
+      case opcodes.BRT: {
+        const relAddr = next();
+        if (this.flag) {
+          this.ip += relAddr;
+        }
+        break;
+      }
+      case opcodes.BRF: {
+        const relAddr = next();
+        if (!this.flag) {
+          this.ip += relAddr;
+        }
+        break;
+      }
 
       case opcodes.PR: {
         const top = this.stack.pop();

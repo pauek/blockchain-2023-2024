@@ -1,17 +1,21 @@
 import { VirtualMachine } from "./vm";
-const { opcodes } = require('./opcodes');
+const { opcodes } = require("./opcodes");
 
 const vm = new VirtualMachine();
 vm.load([
-  opcodes.PUSH, 5,
-  opcodes.PUSH, 12,
-  opcodes.PUSH, 8,
-  opcodes.PUSH, 5,
-  opcodes.MOD,
-  opcodes.DIV,
-  opcodes.MUL,
+  opcodes.PUSH, 2,
+  opcodes.PUSH, -4,
+  opcodes.EQ,
+  opcodes.BRT, 4,
+
+  opcodes.PUSH, -56,
+  opcodes.PR,
+  opcodes.HALT,
+
+  opcodes.PUSH, 789,
+  opcodes.PR,
   opcodes.HALT,
 ]);
+
 vm.run();
 
-console.log(vm.pop());
