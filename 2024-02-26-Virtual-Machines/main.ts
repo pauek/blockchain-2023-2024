@@ -5,7 +5,11 @@ const vm = new VirtualMachine();
 vm.load([
   opcodes.PUSH, 5,
   opcodes.PUSH, 12,
-  opcodes.ADD,
+  opcodes.PUSH, 8,
+  opcodes.PUSH, 5,
+  opcodes.MOD,
+  opcodes.DIV,
+  opcodes.MUL,
   opcodes.HALT,
 ]);
 vm.run();

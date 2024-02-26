@@ -32,8 +32,41 @@ export class VirtualMachine {
   }
 
   step() {
-    const opcode = this.code[this.ip];
-    this.ip++;
+    const next = () => {
+      if (this.ip < 0 || this.ip > this.code.length) {
+        throw new Error(
+          `VirtualMachine.step.next: ip out of bounds`
+        );
+      }
+      const curr = this.code[this.ip];
+      this.ip++;
+      return curr;
+    };
+    const pop = () => {
+      const value = this.stack.pop();
+      if (value === undefined) {
+        throw new Error(
+          `VirtualMachine.step.pop: stack underflow!`
+        );
+      }
+      return value;
+    };
+    const push = (...args: number[]) =>
+      this.stack.push(...args);
+
+    const arithmetic = (
+      fn: (a: number, b: number) => number
+    ) => {
+      const b = pop();
+      const a = pop();
+      const result = fn(a, b);
+      if (Number.isNaN(result) || result === Infinity) {
+        throw new Error(`VirtualMachine.step.artithmetic: Not a number!`);
+      }
+      push(result);
+    };
+
+    const opcode = next();
 
     switch (opcode) {
       case opcodes.HALT: {
@@ -41,22 +74,33 @@ export class VirtualMachine {
         break;
       }
       case opcodes.PUSH: {
-        const value = this.code[this.ip];
-        this.ip++;
+        const value = next();
         this.stack.push(value);
         break;
       }
-      case opcodes.ADD: {
-        const b = this.stack.pop();
-        const a = this.stack.pop();
-        if (!a || !b) {
-          throw new Error(
-            `VirtualMachine.pop: stack underflow!`
-          );
-        }
-        this.stack.push(a + b);
+
+      case opcodes.ADD:
+        arithmetic((a, b) => a + b);
         break;
-      }
+
+      case opcodes.SUB: 
+        arithmetic((a, b) => a - b)
+        break;
+      
+      case opcodes.MUL: 
+        arithmetic((a, b) => a * b)
+        break;
+      
+      case opcodes.DIV: 
+        arithmetic((a, b) => a / b);
+        break;
+      
+      case opcodes.MOD: 
+        arithmetic((a, b) => a % b);
+        break;
+
+      
+
       case opcodes.PR: {
         const top = this.stack.pop();
         console.log(top);
