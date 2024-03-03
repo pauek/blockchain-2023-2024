@@ -1,5 +1,5 @@
 import { VirtualMachine } from "./vm";
-const { opcodes } = require("./opcodes");
+import opcodes from './opcodes.json';
 
 const vm = new VirtualMachine();
 vm.load([

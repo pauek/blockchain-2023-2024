@@ -31,6 +31,7 @@ let opcodes: Record<string, number> = {};
 for (const { name, opcode } of opcodeList) {
   opcodes[name] = opcode;
 }
+Bun.write("opcodes.json", JSON.stringify(opcodes, null, 2));
 
 module.exports = {
   opcodes,
