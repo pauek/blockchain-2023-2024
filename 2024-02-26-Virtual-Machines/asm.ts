@@ -22,7 +22,7 @@ const translateLabels = (labels: Map<string, number>) => (x: number | string, ad
   }
   const targetAddr = labels.get(x);
   if (targetAddr === undefined) {
-    throw new Error(`Label ${x} not found`);
+    throw new Error(`Label "${x}" not found`);
   }
   return targetAddr - (addr + 1); // Jump relative to next instruction
 }
