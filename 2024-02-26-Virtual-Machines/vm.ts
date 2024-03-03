@@ -68,6 +68,12 @@ export class VirtualMachine {
       push(result);
     };
 
+    const comparison = (fn: (a: number, b: number) => boolean) => {
+      const b = pop();
+      const a = pop();
+      this.flag = fn(a, b);
+    }
+
     const opcode = next();
 
     switch (opcode) {
@@ -100,7 +106,7 @@ export class VirtualMachine {
       }
       case opcodes.DEC: {
         const val = pop();
-        push(val + 1);
+        push(val - 1);
         break;
       }
 
@@ -125,39 +131,27 @@ export class VirtualMachine {
         break;
 
       case opcodes.LT: {
-        const b = pop();
-        const a = pop();
-        this.flag = a < b;
+        comparison((a, b) => a < b);
         break;
       }
       case opcodes.GT: {
-        const b = pop();
-        const a = pop();
-        this.flag = a > b;
+        comparison((a, b) => a > b);
         break;
       }
       case opcodes.LTE: {
-        const b = pop();
-        const a = pop();
-        this.flag = a <= b;
+        comparison((a, b) => a <= b);
         break;
       }
       case opcodes.GTE: {
-        const b = pop();
-        const a = pop();
-        this.flag = a >= b;
+        comparison((a, b) => a >= b);
         break;
       }
       case opcodes.EQ: {
-        const b = pop();
-        const a = pop();
-        this.flag = a === b;
+        comparison((a, b) => a === b);
         break;
       }
       case opcodes.NEQ: {
-        const b = pop();
-        const a = pop();
-        this.flag = a !== b;
+        comparison((a, b) => a !== b);
         break;
       }
 
