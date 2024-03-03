@@ -14,24 +14,34 @@ const getOpcode = (op: string) => {
 const toNumber = (x: string): number | string => {
   const n = Number(x);
   return Number.isNaN(n) ? x : n;
-}
+};
 
-const translateLabels = (labels: Map<string, number>) => (x: number | string, addr: number): number => {
-  if (typeof x === "number") {
-    return x;
-  }
-  const targetAddr = labels.get(x);
-  if (targetAddr === undefined) {
-    throw new Error(`Label "${x}" not found`);
-  }
-  return targetAddr - (addr + 1); // Jump relative to next instruction
-}
+const translateLabels =
+  (labels: Map<string, number>) =>
+  (x: number | string, addr: number): number => {
+    if (typeof x === "number") {
+      return x;
+    }
+    const targetAddr = labels.get(x);
+    if (targetAddr === undefined) {
+      throw new Error(`Label "${x}" not found`);
+    }
+    return targetAddr - (addr + 1); // Jump relative to next instruction
+  };
 
+const removeCommentsAndSpace = (line: string) => {
+  const start = line.indexOf("//");
+  const noComments = start == -1 ? line : line.slice(0, start);
+  return noComments.trim();
+};
 
 // Assembly
 export const assemble = (asmCode: string | Buffer): number[] => {
   const asm = asmCode instanceof Buffer ? asmCode.toString() : asmCode;
-  const lines = asm.trim().split("\n");
+  const lines = asm
+    .split("\n")
+    .map(removeCommentsAndSpace) // quito comentarios
+    .filter(Boolean);
 
   // Translate opcodes + assign positions to labels
   let ip = 0;
