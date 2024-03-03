@@ -1,21 +1,14 @@
+import { readFile } from 'fs/promises';
+import { assemble } from "./asm";
 import { VirtualMachine } from "./vm";
-import opcodes from './opcodes.json';
+
+const [_runtime, _script, ...args] = process.argv;
+if (args.length === 0) {
+  console.error(`usage: bun run main.ts <asm-file>`);
+  process.exit(1);
+}
 
 const vm = new VirtualMachine();
-vm.load([
-  opcodes.PUSH, 2,
-  opcodes.PUSH, -4,
-  opcodes.EQ,
-  opcodes.BRT, 4,
-
-  opcodes.PUSH, -56,
-  opcodes.PR,
-  opcodes.HALT,
-
-  opcodes.PUSH, 789,
-  opcodes.PR,
-  opcodes.HALT,
-]);
-
+vm.load(assemble(await readFile(args[0])));
 vm.run();
 
