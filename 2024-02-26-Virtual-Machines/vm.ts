@@ -77,7 +77,30 @@ export class VirtualMachine {
       }
       case opcodes.PUSH: {
         const value = next();
-        this.stack.push(value);
+        push(value);
+        break;
+      }
+
+      case opcodes.DUP: {
+        const val = pop();
+        push(val, val);
+        break;
+      }
+      case opcodes.DUP2: {
+        const b = pop();
+        const a = pop();
+        push(a, b, a, b);
+        break;
+      }
+
+      case opcodes.INC: {
+        const val = pop();
+        push(val + 1);
+        break;
+      }
+      case opcodes.DEC: {
+        const val = pop();
+        push(val + 1);
         break;
       }
 

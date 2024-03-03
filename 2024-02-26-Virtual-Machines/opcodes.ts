@@ -20,6 +20,9 @@ const opcodeList = [
   { name: "EQ", opcode: 14, nparams: 0 },
   { name: "NEQ", opcode: 15, nparams: 0 },
 
+  { name: "INC", opcode: 16, nparams: 0 },
+  { name: "DEC", opcode: 17, nparams: 0 },
+
   { name: "BR", opcode: 20, nparams: 1 },
   { name: "BRT", opcode: 21, nparams: 1 },
   { name: "BRF", opcode: 22, nparams: 1 },
