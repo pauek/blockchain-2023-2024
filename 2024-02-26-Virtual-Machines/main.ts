@@ -8,7 +8,11 @@ if (args.length === 0) {
   process.exit(1);
 }
 
+const [asmFile, ...rest] = args;
 const vm = new VirtualMachine();
-vm.load(assemble(await readFile(args[0])));
+vm.load(assemble(await readFile(asmFile)));
+for (const val of rest) {
+  vm.push(Number(val));
+}
 vm.run();
 
