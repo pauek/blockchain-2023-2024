@@ -27,6 +27,9 @@ const opcodeList = [
   { name: "BRT", opcode: 21, nparams: 1 },
   { name: "BRF", opcode: 22, nparams: 1 },
 
+  { name: "LOAD", opcode: 30, nparams: 0 },
+  { name: "STORE", opcode: 31, nparams: 0 },
+
   { name: "PR", opcode: 100, nparams: 0 },
 ];
 

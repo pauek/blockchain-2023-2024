@@ -5,6 +5,7 @@ type VMState = "halted" | "running" | "error";
 export class VirtualMachine {
   state: VMState = "halted";
   code: number[] = [];
+  memory: number[] = [];
   ip: number = 0;
   flag: boolean = false;
 
@@ -31,6 +32,10 @@ export class VirtualMachine {
     this.state = "running";
   }
 
+  setMem(mem: number[]) {
+    this.memory = mem;
+  }
+
   step() {
     const next = () => {
       if (this.ip < 0 || this.ip > this.code.length) {
@@ -53,6 +58,14 @@ export class VirtualMachine {
     };
     const push = (...args: number[]) =>
       this.stack.push(...args);
+
+    
+    const memAddr = (addr: number): number => {
+      if (addr < 0 || addr > this.memory.length) {
+        throw new Error(`Address out of memory: ${addr}`);
+      }
+      return addr;
+    }
 
     const arithmetic = (
       fn: (a: number, b: number) => number
@@ -172,6 +185,18 @@ export class VirtualMachine {
         if (!this.flag) {
           this.ip += relAddr;
         }
+        break;
+      }
+
+      case opcodes.LOAD: {
+        const addr = pop();
+        push(this.memory[memAddr(addr)]);
+        break;
+      }
+      case opcodes.STORE: {
+        const value = pop();
+        const addr = pop();
+        this.memory[memAddr(addr)] = value;
         break;
       }
 

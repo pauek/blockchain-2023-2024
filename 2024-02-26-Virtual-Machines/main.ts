@@ -1,4 +1,4 @@
-import { readFile } from 'fs/promises';
+import { readFile } from "fs/promises";
 import { assemble } from "./asm";
 import { VirtualMachine } from "./vm";
 
@@ -10,9 +10,14 @@ if (args.length === 0) {
 
 const [asmFile, ...rest] = args;
 const vm = new VirtualMachine();
+const randomMem = Array.from({ length: 16 }).map(() =>
+  Math.floor(Math.random() * 255)
+);
+vm.setMem(randomMem);
+console.log(vm.memory);
 vm.load(assemble(await readFile(asmFile)));
 for (const val of rest) {
   vm.push(Number(val));
 }
 vm.run();
-
+console.log(vm.memory);
