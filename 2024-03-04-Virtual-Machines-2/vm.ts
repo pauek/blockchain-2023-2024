@@ -1,4 +1,4 @@
-const { opcodes } = require("./opcodes");
+import opcodes from './opcodes.json';
 
 type VMState = "halted" | "running" | "error";
 

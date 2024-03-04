@@ -1,5 +1,7 @@
 import { VirtualMachine } from "./vm";
-const { opcodes } = require("./opcodes");
+
+// Generate opcodes.json with "bun run opcodes.ts"
+import opcodes from './opcodes.json'; 
 
 const vm = new VirtualMachine();
 vm.load([
