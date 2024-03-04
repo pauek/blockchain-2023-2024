@@ -267,10 +267,12 @@ export class VirtualMachine {
       column += ` ${this.code[this.ip + i]}`;
     }
     out(column.padEnd(20));
-    out(`[${this.stack.map(String).join(", ")}]\n`);
+    let stackStr = `[${this.stack.map(String).join(", ")}]`;
+    out(stackStr.padEnd(20));
+    out(`(${this.memory.map(String).join(", ")})\n`);
   }
 
   traceAfter() {
-
+    
   }
 }
