@@ -55,6 +55,8 @@ export class VirtualMachine {
     const push = (...args: number[]) =>
       this.stack.push(...args);
 
+    const top = (n: number = 1) => this.stack.slice(-n);
+
     const arithmetic = (
       fn: (a: number, b: number) => number
     ) => {
@@ -78,7 +80,19 @@ export class VirtualMachine {
       }
       case opcodes.PUSH: {
         const value = next();
-        this.stack.push(value);
+        push(value);
+        break;
+      }
+      case opcodes.POP: {
+        pop();
+        break;
+      }
+      case opcodes.DUP: {
+        push(...top());
+        break;
+      }
+      case opcodes.DUP2: {
+        push(...top(2));
         break;
       }
 
@@ -136,6 +150,17 @@ export class VirtualMachine {
         const b = pop();
         const a = pop();
         this.flag = a !== b;
+        break;
+      }
+
+      case opcodes.INC: {
+        const top = pop();
+        push(top + 1);
+        break;
+      }
+      case opcodes.DEC: {
+        const top = pop();
+        push(top - 1);
         break;
       }
 

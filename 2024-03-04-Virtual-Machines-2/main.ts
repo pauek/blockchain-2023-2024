@@ -6,6 +6,5 @@ const vm = new VirtualMachine();
 const asm = await readFile('asm/loop.asm');
 const bytecode = assemble(asm);
 vm.load(bytecode);
-
-// vm.run();
+vm.run();
 
