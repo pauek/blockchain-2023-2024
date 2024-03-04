@@ -1,23 +1,11 @@
+import { readFile } from 'fs/promises';
 import { VirtualMachine } from "./vm";
-
-// Generate opcodes.json with "bun run opcodes.ts"
-import opcodes from './opcodes.json'; 
+import { assemble } from "./asm";
 
 const vm = new VirtualMachine();
-vm.load([
-  opcodes.PUSH, 2,
-  opcodes.PUSH, -4,
-  opcodes.EQ,
-  opcodes.BRT, 4,
+const asm = await readFile('asm/loop.asm');
+const bytecode = assemble(asm);
+vm.load(bytecode);
 
-  opcodes.PUSH, -56,
-  opcodes.PR,
-  opcodes.HALT,
-
-  opcodes.PUSH, 789,
-  opcodes.PR,
-  opcodes.HALT,
-]);
-
-vm.run();
+// vm.run();
 

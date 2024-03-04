@@ -1,3 +1,4 @@
+// Generate opcodes.json with "bun run opcodes.ts"
 import opcodes from './opcodes.json';
 
 type VMState = "halted" | "running" | "error";
