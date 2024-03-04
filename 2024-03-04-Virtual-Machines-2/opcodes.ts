@@ -23,9 +23,14 @@ const opcodeList = [
   { name: "INC", opcode: 16, nparams: 0 },
   { name: "DEC", opcode: 17, nparams: 0 },
 
+  { name: "SWAP", opcode: 18, nparams: 0 },
+
   { name: "BR", opcode: 20, nparams: 1 },
   { name: "BRT", opcode: 21, nparams: 1 },
   { name: "BRF", opcode: 22, nparams: 1 },
+
+  { name: "LOAD", opcode: 30, nparams: 0 },  // load  [..., a] -> [..., b]  (b = mem[a])
+  { name: "STORE", opcode: 31, nparams: 0 }, // store [..., a, b] -> [...]  (mem[a] = b)
 
   { name: "PR", opcode: 100, nparams: 0 },
 ];

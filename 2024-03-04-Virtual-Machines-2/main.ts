@@ -12,6 +12,7 @@ const vm = new VirtualMachine({ trace: true });
 const asm = await readFile(script);
 const bytecode = assemble(asm);
 vm.load(bytecode);
+vm.setMemSize(10);
 
 for (const arg of args) {
   const value = Number(arg);

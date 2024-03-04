@@ -10,7 +10,7 @@ export class VirtualMachine {
   ip: number = 0;
   flag: boolean = false;
   trace: boolean = false;
-
+  memory: number[] = [];
   stack: number[] = [];
 
   constructor({ trace = false }: { trace: boolean }) {
@@ -38,13 +38,21 @@ export class VirtualMachine {
     this.state = "running";
   }
 
+  setMemSize(n: number) {
+    this.memory = Array.from({ length: n }).map(() => Math.floor(Math.random() * 255));
+  }
+
+  _checkIp() {
+    if (this.ip < 0 || this.ip >= this.code.length) {
+      throw new Error(
+        `VirtualMachine.step.next: ip out of bounds`
+      );
+    }
+  }
+
   step() {
     const next = () => {
-      if (this.ip < 0 || this.ip > this.code.length) {
-        throw new Error(
-          `VirtualMachine.step.next: ip out of bounds`
-        );
-      }
+      this._checkIp();
       const curr = this.code[this.ip];
       this.ip++;
       return curr;
@@ -62,6 +70,13 @@ export class VirtualMachine {
       this.stack.push(...args);
 
     const top = (n: number = 1) => this.stack.slice(-n);
+
+    const checkAddr = (addr: number) => {
+      if (addr < 0 || addr >= this.memory.length) {
+        throw new Error(`Segmentation Fault (${addr})`);
+      }
+      return addr;
+    }
 
     const arithmetic = (
       fn: (a: number, b: number) => number
@@ -174,6 +189,13 @@ export class VirtualMachine {
         break;
       }
 
+      case opcodes.SWAP: {
+        const b = pop();
+        const a = pop();
+        push(b, a);
+        break;
+      }
+
       case opcodes.BR: {
         const relAddr = next();
         this.ip += relAddr;
@@ -191,6 +213,18 @@ export class VirtualMachine {
         if (!this.flag) {
           this.ip += relAddr;
         }
+        break;
+      }
+
+      case opcodes.LOAD: {
+        const addr = pop();
+        push(this.memory[checkAddr(addr)]);
+        break;
+      }
+      case opcodes.STORE: {
+        const value = pop();
+        const addr = pop();
+        this.memory[checkAddr(addr)] = value;
         break;
       }
 
@@ -221,6 +255,7 @@ export class VirtualMachine {
     const out = (s: string) => process.stdout.write(s);
     out(`${this.ip.toString().padStart(3)}: `);
     out(this.flag ? "* " : "  ");
+    this._checkIp();
     const currByte = this.code[this.ip];
     const opInfo = codeops[currByte];
     if (opInfo === null) {
