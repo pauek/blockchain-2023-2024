@@ -1,4 +1,3 @@
-    PUSH 85
     PUSH 2
 start:
     DUP2
