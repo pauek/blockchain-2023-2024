@@ -9,15 +9,16 @@ if (args.length === 0) {
 }
 
 const [asmFile, ...rest] = args;
-const vm = new VirtualMachine();
-const randomMem = Array.from({ length: 16 }).map(() =>
-  Math.floor(Math.random() * 255)
+const opts: Record<string, boolean> = rest.reduce(
+  (opts, a) => (a.startsWith("--") ? { ...opts, [a.slice(2)]: true } : opts),
+  {}
 );
-vm.setMem(randomMem);
-console.log(vm.memory);
+const params = rest.filter((a) => !a.startsWith("--"));
+const vm = new VirtualMachine({ trace: opts.trace });
+const mem = Array.from({ length: 15 }).map((_, index) => index + 2);
+vm.setMem(mem);
 vm.load(assemble(await readFile(asmFile)));
-for (const val of rest) {
+for (const val of params) {
   vm.push(Number(val));
 }
 vm.run();
-console.log(vm.memory);

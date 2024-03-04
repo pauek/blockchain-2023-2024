@@ -1,4 +1,10 @@
-const opcodeList = [
+type Opcode = {
+  name: string;
+  opcode: number;
+  nparams: number;
+};
+
+const opcodeList: Opcode[] = [
   { name: "HALT", opcode: 0, nparams: 0 },
 
   { name: "PUSH", opcode: 1, nparams: 1 },
@@ -34,8 +40,11 @@ const opcodeList = [
 ];
 
 let opcodes: Record<string, number> = {};
-for (const { name, opcode } of opcodeList) {
+let codeops: Array<Opcode | undefined> = Array.from({ length: 101 }).map(() => undefined);
+for (const { name, opcode, nparams } of opcodeList) {
   opcodes[name] = opcode;
+  codeops[opcode] = { name, opcode, nparams };
 }
 
 Bun.write("opcodes.json", JSON.stringify(opcodes, null, 2));
+Bun.write("codeops.json", JSON.stringify(codeops, null, 2));

@@ -1,4 +1,5 @@
-import opcodes from './opcodes.json';
+import codeops from "./codeops.json";
+import opcodes from "./opcodes.json";
 
 type VMState = "halted" | "running" | "error";
 
@@ -8,8 +9,12 @@ export class VirtualMachine {
   memory: number[] = [];
   ip: number = 0;
   flag: boolean = false;
-
+  trace: boolean;
   stack: number[] = [];
+
+  constructor({ trace = false }: { trace: boolean }) {
+    this.trace = trace;
+  }
 
   push(x: number) {
     this.stack.push(x);
@@ -18,9 +23,7 @@ export class VirtualMachine {
   pop(): number {
     const top = this.stack.pop();
     if (top === undefined) {
-      throw new Error(
-        `VirtualMachine.pop: stack underflow!`
-      );
+      throw new Error(`VirtualMachine.pop: stack underflow!`);
     }
     return top;
   }
@@ -39,9 +42,7 @@ export class VirtualMachine {
   step() {
     const next = () => {
       if (this.ip < 0 || this.ip > this.code.length) {
-        throw new Error(
-          `VirtualMachine.step.next: ip out of bounds`
-        );
+        throw new Error(`VirtualMachine.step.next: ip out of bounds`);
       }
       const curr = this.code[this.ip];
       this.ip++;
@@ -50,33 +51,25 @@ export class VirtualMachine {
     const pop = () => {
       const value = this.stack.pop();
       if (value === undefined) {
-        throw new Error(
-          `VirtualMachine.step.pop: stack underflow!`
-        );
+        throw new Error(`VirtualMachine.step.pop: stack underflow!`);
       }
       return value;
     };
-    const push = (...args: number[]) =>
-      this.stack.push(...args);
+    const push = (...args: number[]) => this.stack.push(...args);
 
-    
     const memAddr = (addr: number): number => {
       if (addr < 0 || addr > this.memory.length) {
         throw new Error(`Address out of memory: ${addr}`);
       }
       return addr;
-    }
+    };
 
-    const arithmetic = (
-      fn: (a: number, b: number) => number
-    ) => {
+    const arithmetic = (fn: (a: number, b: number) => number) => {
       const b = pop();
       const a = pop();
       const result = fn(a, b);
       if (Number.isNaN(result) || result === Infinity) {
-        throw new Error(
-          `VirtualMachine.step.artithmetic: Not a number!`
-        );
+        throw new Error(`VirtualMachine.step.artithmetic: Not a number!`);
       }
       push(result);
     };
@@ -85,7 +78,9 @@ export class VirtualMachine {
       const b = pop();
       const a = pop();
       this.flag = fn(a, b);
-    }
+    };
+
+    this.traceBefore();
 
     const opcode = next();
 
@@ -97,6 +92,10 @@ export class VirtualMachine {
       case opcodes.PUSH: {
         const value = next();
         push(value);
+        break;
+      }
+      case opcodes.POP: {
+        pop();
         break;
       }
 
@@ -206,16 +205,57 @@ export class VirtualMachine {
         break;
       }
       default: {
-        throw new Error(
-          `VirtualMachine.pop: unknown opcode ${opcode}`
-        );
+        throw new Error(`VirtualMachine.pop: unknown opcode ${opcode}`);
       }
     }
+
+    this.traceAfter();
   }
 
   run() {
     while (this.state === "running") {
       this.step();
     }
+  }
+
+  traceStack() {
+    return `[${this.stack.map((v) => String(v)).join(", ")}]`.padEnd(30);
+  }
+  traceMem() {
+    return `[${this.memory.map((v) => String(v).padStart(3)).join("  ")}]`;
+  }
+
+  traceBefore() {
+    if (!this.trace) {
+      return;
+    }
+    const out = (s: string) => process.stdout.write(s);
+    out(this.ip.toFixed().padStart(3, " "));
+    out(":");
+    out(this.flag ? "⚑ " : "  ");
+    const op = codeops[this.code[this.ip]];
+    if (op === null) {
+      throw new Error(`Unknown opcode ${this.code[this.ip]}`);
+    }
+    const { name, nparams } = op;
+    let instr = `${name}`;
+    if (nparams > 0) {
+      instr += this.code
+        .slice(this.ip + 1, this.ip + 1 + nparams)
+        .map((v) => ` ${v}`)
+        .join("");
+    }
+    out(instr.padEnd(10, " "));
+    out(`St: ${this.traceStack()} Mem: ${this.traceMem()}`);
+    out(`\n`);
+  }
+
+  traceAfter() {
+    if (!this.trace) {
+      return;
+    }
+    const out = (s: string) => process.stdout.write(s);
+    out("".padStart(16));
+    out(`St: ${this.traceStack()} Mem: ${this.traceMem()}\n\n`);
   }
 }
