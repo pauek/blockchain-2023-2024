@@ -1,8 +1,6 @@
     PUSH 85
     PUSH 2
 start:
-    DUP
-    PR
     DUP2
     DUP
     MUL

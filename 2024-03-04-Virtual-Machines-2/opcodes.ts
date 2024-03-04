@@ -31,8 +31,13 @@ const opcodeList = [
 ];
 
 let opcodes: Record<string, number> = {};
-for (const { name, opcode } of opcodeList) {
-  opcodes[name] = opcode;
-}
-Bun.write("opcodes.json", JSON.stringify(opcodes, null, 2));
+let codeops: Array<(typeof opcodeList)[number] | null> =
+  Array.from({ length: 101 });
 
+for (const { name, opcode, nparams } of opcodeList) {
+  opcodes[name] = opcode;
+  codeops[opcode] = { name, opcode, nparams };
+}
+
+Bun.write("codeops.json", JSON.stringify(codeops, null, 2));
+Bun.write("opcodes.json", JSON.stringify(opcodes, null, 2));

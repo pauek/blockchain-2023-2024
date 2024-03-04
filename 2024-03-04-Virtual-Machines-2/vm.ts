@@ -1,5 +1,6 @@
 // Generate opcodes.json with "bun run opcodes.ts"
 import opcodes from './opcodes.json';
+import codeops from './codeops.json';
 
 type VMState = "halted" | "running" | "error";
 
@@ -8,8 +9,13 @@ export class VirtualMachine {
   code: number[] = [];
   ip: number = 0;
   flag: boolean = false;
+  trace: boolean = false;
 
   stack: number[] = [];
+
+  constructor({ trace = false }: { trace: boolean }) {
+    this.trace = trace;
+  }
 
   push(x: number) {
     this.stack.push(x);
@@ -70,6 +76,10 @@ export class VirtualMachine {
       }
       push(result);
     };
+
+    if (this.trace) {
+      this.traceBefore();
+    }
 
     const opcode = next();
 
@@ -195,11 +205,37 @@ export class VirtualMachine {
         );
       }
     }
+
+    if (this.trace) {
+      this.traceAfter();
+    }
   }
 
   run() {
     while (this.state === "running") {
       this.step();
     }
+  }
+
+  traceBefore() {
+    const out = (s: string) => process.stdout.write(s);
+    out(`${this.ip.toString().padStart(3)}: `);
+    out(this.flag ? "* " : "  ");
+    const currByte = this.code[this.ip];
+    const opInfo = codeops[currByte];
+    if (opInfo === null) {
+      throw new Error(`Unknown opcode ${currByte}`);
+    }
+    const { name, nparams } = opInfo;
+    let column = `${name}`;
+    for (let i = 1; i <= nparams; i++) {
+      column += ` ${this.code[this.ip + i]}`;
+    }
+    out(column.padEnd(20));
+    out(`[${this.stack.map(String).join(", ")}]\n`);
+  }
+
+  traceAfter() {
+
   }
 }

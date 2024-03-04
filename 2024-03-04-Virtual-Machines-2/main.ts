@@ -9,7 +9,7 @@ if (args.length === 0) {
 }
 const [script] = args;
 
-const vm = new VirtualMachine();
+const vm = new VirtualMachine({ trace: true });
 const asm = await readFile(script);
 const bytecode = assemble(asm);
 vm.load(bytecode);
