@@ -1,6 +1,6 @@
     PUSH 2
     PUSH -4
-    EQ
+    NEQ
     BRT segunda
 primera:
     PUSH -56
