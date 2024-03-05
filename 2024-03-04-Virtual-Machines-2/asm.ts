@@ -1,4 +1,3 @@
-import { connect } from 'bun';
 import opcodes from './opcodes.json';
 
 export const assemble = (buf: Buffer | string) => {
